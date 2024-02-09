@@ -1,0 +1,33 @@
+package com.julindang.member.controller;
+
+import com.julindang.member.dto.request.login.LoginRequestDto;
+import com.julindang.member.dto.response.login.LoginResponseDto;
+import com.julindang.member.service.member.MemberService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/member")
+@RequiredArgsConstructor
+@Slf4j
+public class MemberController {
+    private final MemberService memberService;
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> signUp(@RequestBody LoginRequestDto dto) {
+        return ResponseEntity.ok(memberService.login(dto));
+    }
+
+    @GetMapping("/nickname")
+    public ResponseEntity<String> checkDuplicated(@RequestParam String nickname) {
+        final Boolean isDuplicated = memberService.checkDuplicatedNickname(nickname);
+
+        if(isDuplicated)
+            return ResponseEntity.ok("사용 가능한 닉네임입니다.");
+        else
+            return new ResponseEntity<>("중복된 닉네임입니다.", HttpStatus.CONFLICT);
+    }
+}
