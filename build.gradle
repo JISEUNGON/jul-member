@@ -46,6 +46,9 @@ dependencies {
 
     //model mapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
+
+    //coolsms
+    implementation 'net.nurigo:sdk:4.3.0'
 }
 
 dependencyManagement {
