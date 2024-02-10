@@ -2,17 +2,14 @@ package com.julindang.member.controller;
 
 import com.julindang.member.dto.request.login.VerifyPhoneNumberRequestDto;
 import com.julindang.member.dto.request.login.VerifyPhoneNumberResponseDto;
-import com.julindang.member.service.member.MemberService;
 import com.julindang.member.service.sms.SmsService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.nurigo.sdk.message.model.Balance;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sms")
@@ -35,5 +32,13 @@ public class SMSController {
             return ResponseEntity.ok("핸드폰 인증 성공.");
         else
             return new ResponseEntity<>("인증번호가 틀림", HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * 메시지 잔액 조회
+     */
+    @GetMapping("/balance")
+    public ResponseEntity<Balance> getMessageList() {
+        return ResponseEntity.ok(smsService.getBalance());
     }
 }

@@ -3,8 +3,11 @@ package com.julindang.member.service.sms;
 import com.julindang.member.dto.request.login.VerifyPhoneNumberRequestDto;
 import com.julindang.member.dto.request.login.VerifyPhoneNumberResponseDto;
 import net.nurigo.sdk.NurigoApp;
+import net.nurigo.sdk.message.model.Balance;
 import net.nurigo.sdk.message.model.Message;
+import net.nurigo.sdk.message.request.MessageListRequest;
 import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
+import net.nurigo.sdk.message.response.MessageListResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,5 +58,12 @@ public class SmsServiceImpl implements SmsService {
     @Transactional
     public Boolean verifyCode(final VerifyPhoneNumberResponseDto dto) {
         return this.codeList.get("0" + dto.getPhoneNumber()).equals(dto.getCode()) ? true : false;
+    }
+
+    @Override
+    public Balance getBalance() {
+        Balance balance = this.messageService.getBalance();
+
+        return balance;
     }
 }
