@@ -67,7 +67,7 @@ public class Member {
     @Column(name = "deleted", columnDefinition = "tinyint")
     private Boolean deleted;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "member_authority",
             joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "member_id")},
