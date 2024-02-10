@@ -1,9 +1,11 @@
 package com.julindang.member.service.member;
 
+import com.julindang.member.domain.Authority;
 import com.julindang.member.domain.Member;
 import com.julindang.member.dto.request.login.LoginRequestDto;
 import com.julindang.member.dto.request.login.SignUpRequestDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
+import com.julindang.member.exception.member.MemberIdNotFoundException;
 import com.julindang.member.repository.MemberRepository;
 import com.julindang.member.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.julindang.member.config.MapperConfig.modelMapper;
 
@@ -74,5 +78,56 @@ public class MemberServiceImpl implements MemberService {
         );
 
         return modelMapper.map(save, LoginResponseDto.class);
+    }
+
+    @Override
+    public Set<Authority> getAuthorities() {
+        return memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        ).getAuthorities();
+    }
+
+    @Override
+    @Transactional
+    public Set<Authority> getAuthorities(final String email) {
+        return memberRepository.findByEmail(email).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        ).getAuthorities();
+    }
+
+    @Override
+    @Transactional
+    public Set<Authority> upgrade(final String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        );
+
+        Set<Authority> authorities = member.getAuthorities();
+
+        authorities.add(Authority.builder()
+                        .authorityName("ROLE_ADMIN")
+                        .build());
+
+        return memberRepository.save(
+                member
+        ).getAuthorities();
+    }
+
+    @Override
+    @Transactional
+    public Set<Authority> downgrade(final String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        );
+
+        Set<Authority> authorities = member.getAuthorities();
+
+        authorities.remove(Authority.builder()
+                        .authorityName("ROLE_ADMIN")
+                .build());
+
+        return memberRepository.save(
+                member
+        ).getAuthorities();
     }
 }
