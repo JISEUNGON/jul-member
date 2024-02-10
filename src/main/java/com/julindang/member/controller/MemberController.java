@@ -6,6 +6,8 @@ import com.julindang.member.dto.request.login.VerifyPhoneNumberResponseDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
 import com.julindang.member.service.member.MemberService;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,10 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/login")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "access token dto"),
+            @ApiResponse(responseCode = "200", description = "null")
+    })
     public ResponseEntity<LoginResponseDto> signUp(@RequestBody LoginRequestDto dto) {
         return ResponseEntity.ok(memberService.login(dto));
     }
