@@ -1,6 +1,7 @@
 package com.julindang.member.controller;
 
 import com.julindang.member.dto.request.login.LoginRequestDto;
+import com.julindang.member.dto.request.login.SignUpRequestDto;
 import com.julindang.member.dto.request.login.VerifyPhoneNumberRequestDto;
 import com.julindang.member.dto.request.login.VerifyPhoneNumberResponseDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
@@ -54,5 +55,10 @@ public class MemberController {
             return ResponseEntity.ok("핸드폰 인증 성공.");
         else
             return new ResponseEntity<>("인증번호가 틀림", HttpStatus.NOT_FOUND);
+    }
+
+    @PostMapping("/sign-up")
+    public ResponseEntity<LoginResponseDto> signUp(@RequestBody SignUpRequestDto dto) {
+        return ResponseEntity.ok(memberService.signUp(dto));
     }
 }

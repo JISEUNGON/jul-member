@@ -34,14 +34,17 @@ public class Member {
     @Column(name = "age", columnDefinition = "int")
     private Long age;
 
-    @Column(name = "height", columnDefinition = "double")
-    private Double height;
+    @Column(name = "height", columnDefinition = "int")
+    private Long height;
 
-    @Column(name = "weight", columnDefinition = "double")
-    private Double weight;
+    @Column(name = "weight", columnDefinition = "int")
+    private Long weight;
 
     @Column(name = "phone_number", columnDefinition = "int")
     private Long phoneNumber;
+
+    @Column(name = "marketing", columnDefinition = "tinyint")
+    private Boolean marketing;
 
     @Column(name = "access_token", columnDefinition = "text")
     private String accessToken;
@@ -58,4 +61,7 @@ public class Member {
     @CreationTimestamp
     @Column(name = "created_at", columnDefinition = "datetime")
     private LocalDateTime createdAt;
+
+    @Column(name = "deleted", columnDefinition = "tinyint")
+    private Boolean deleted;
 }
