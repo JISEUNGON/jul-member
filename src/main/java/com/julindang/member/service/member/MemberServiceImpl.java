@@ -2,11 +2,14 @@ package com.julindang.member.service.member;
 
 import com.julindang.member.domain.Authority;
 import com.julindang.member.domain.Member;
+import com.julindang.member.domain.MemberRisk;
+import com.julindang.member.domain.RiskItem;
 import com.julindang.member.dto.request.login.LoginRequestDto;
 import com.julindang.member.dto.request.login.SignUpRequestDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
 import com.julindang.member.exception.member.MemberIdNotFoundException;
 import com.julindang.member.repository.MemberRepository;
+import com.julindang.member.repository.MemberRiskRepository;
 import com.julindang.member.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -25,13 +26,13 @@ import static com.julindang.member.config.MapperConfig.modelMapper;
 @Slf4j
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
-    private final String PHONE_NUMBER;
+    private final MemberRiskRepository memberRiskRepository;
 
     public MemberServiceImpl(MemberRepository memberRepository, @Value("${coolsms.key}")String API_KEY, @Value("${coolsms.secret}") String secret,
-                             @Value("${coolsms.phone}") String ph) {
+                             final MemberRiskRepository memberRiskRepository) {
         this.memberRepository = memberRepository;
 
-        PHONE_NUMBER = ph;
+        this.memberRiskRepository = memberRiskRepository;
     }
 
     @Override
@@ -76,6 +77,15 @@ public class MemberServiceImpl implements MemberService {
                         .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
                         .build()
         );
+
+        for(RiskItem item: dto.getRiskItemList()) {
+            memberRiskRepository.save(
+                    MemberRisk.builder()
+                            .memberId(save.getMemberId())
+                            .itemId(item.getItemId())
+                            .build()
+            );
+        }
 
         return modelMapper.map(save, LoginResponseDto.class);
     }

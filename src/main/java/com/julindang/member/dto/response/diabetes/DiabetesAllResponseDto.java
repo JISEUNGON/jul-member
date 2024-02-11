@@ -3,7 +3,6 @@ package com.julindang.member.dto.response.diabetes;
 import com.julindang.member.domain.RiskItem;
 import lombok.*;
 
-import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor

@@ -1,9 +1,12 @@
 package com.julindang.member.dto.request.login;
 
+import com.julindang.member.domain.RiskItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,4 +22,5 @@ public class SignUpRequestDto {
     private Long phoneNumber;
     private String email;
     private Long loginType;
+    private List<RiskItem> riskItemList;
 }
