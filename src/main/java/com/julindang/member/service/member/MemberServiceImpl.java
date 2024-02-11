@@ -11,6 +11,7 @@ import com.julindang.member.dto.request.member.MemberEditRequestDto;
 import com.julindang.member.dto.request.member.MemberProfileEditRequestDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
 import com.julindang.member.dto.response.member.MemberEditResponseDto;
+import com.julindang.member.dto.response.member.MemberInfoResponseDto;
 import com.julindang.member.exception.member.MemberIdNotFoundException;
 import com.julindang.member.repository.MemberRepository;
 import com.julindang.member.repository.MemberRiskRepository;
@@ -177,5 +178,31 @@ public class MemberServiceImpl implements MemberService {
     @Transactional
     public void edit(final MemberRiskRequestDto dto) {
 
+    }
+
+    @Override
+    @Transactional
+    public MemberInfoResponseDto getIfo() {
+        Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        );
+
+        MemberInfoResponseDto map = modelMapper.map(member, MemberInfoResponseDto.class);
+
+        map.setRiskItemList(memberRiskRepository.findByMemberId(JwtUtil.getMemberId()));
+
+        return map;
+    }
+
+    @Override
+    @Transactional
+    public void delete() {
+        Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        );
+
+        member.setDeleted(true);
+
+        memberRepository.save(member);
     }
 }

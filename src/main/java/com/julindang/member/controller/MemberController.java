@@ -7,6 +7,7 @@ import com.julindang.member.dto.request.member.MemberEditRequestDto;
 import com.julindang.member.dto.request.member.MemberProfileEditRequestDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
 import com.julindang.member.dto.response.member.MemberEditResponseDto;
+import com.julindang.member.dto.response.member.MemberInfoResponseDto;
 import com.julindang.member.service.member.MemberService;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -61,6 +62,17 @@ public class MemberController {
     @PostMapping("/risk/edit")
     public ResponseEntity editRisk(@RequestBody MemberRiskRequestDto dto) {
         memberService.edit(dto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<MemberInfoResponseDto> getInfo() {
+        return ResponseEntity.ok(memberService.getIfo());
+    }
+
+    @DeleteMapping("/sign-out")
+    public ResponseEntity signOut() {
+        memberService.delete();
         return ResponseEntity.ok().build();
     }
 }
