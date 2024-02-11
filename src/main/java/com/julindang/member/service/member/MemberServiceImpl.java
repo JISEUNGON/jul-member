@@ -4,9 +4,13 @@ import com.julindang.member.domain.Authority;
 import com.julindang.member.domain.Member;
 import com.julindang.member.domain.MemberRisk;
 import com.julindang.member.domain.RiskItem;
+import com.julindang.member.dto.MemberRiskRequestDto;
 import com.julindang.member.dto.request.login.LoginRequestDto;
 import com.julindang.member.dto.request.login.SignUpRequestDto;
+import com.julindang.member.dto.request.member.MemberEditRequestDto;
+import com.julindang.member.dto.request.member.MemberProfileEditRequestDto;
 import com.julindang.member.dto.response.login.LoginResponseDto;
+import com.julindang.member.dto.response.member.MemberEditResponseDto;
 import com.julindang.member.exception.member.MemberIdNotFoundException;
 import com.julindang.member.repository.MemberRepository;
 import com.julindang.member.repository.MemberRiskRepository;
@@ -139,5 +143,39 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(
                 member
         ).getAuthorities();
+    }
+
+    @Override
+    public MemberEditResponseDto edit(final MemberEditRequestDto dto) {
+        Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow();
+
+        if(dto.getPhoneNumber().equals(member.getPhoneNumber()))
+            member.setPhoneNumber(dto.getPhoneNumber());
+
+        if(dto.getNickname().equals(member.getNickname()))
+            member.setNickname(dto.getNickname());
+
+        return modelMapper.map(memberRepository.save(member), MemberEditResponseDto.class);
+    }
+
+    @Override
+    @Transactional
+    public void edit(final MemberProfileEditRequestDto dto) {
+        Member member = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        );
+
+        member.setGender(dto.getGender());
+        member.setAge(dto.getAge());
+        member.setHeight(dto.getHeight());
+        member.setWeight(dto.getWeight());
+
+        memberRepository.save(member);
+    }
+
+    @Override
+    @Transactional
+    public void edit(final MemberRiskRequestDto dto) {
+
     }
 }
