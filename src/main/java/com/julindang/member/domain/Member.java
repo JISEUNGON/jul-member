@@ -73,4 +73,13 @@ public class Member {
             joinColumns = {@JoinColumn(name = "member_id", referencedColumnName = "member_id")},
             inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
+
+    public String getRole() {
+        for (Authority authority : authorities) {
+            if(authority.getAuthorityName().equals("ROLE_ADMIN"))
+                return "ROLE_ADMIN";
+        }
+
+        return "ROLE_USER";
+    }
 }

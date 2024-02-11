@@ -205,4 +205,14 @@ public class MemberServiceImpl implements MemberService {
 
         memberRepository.save(member);
     }
+
+    @Override
+    @Transactional
+    public String getAuthority() {
+        final String role = memberRepository.findById(JwtUtil.getMemberId()).orElseThrow(
+                () -> new MemberIdNotFoundException(JwtUtil.getMemberId())
+        ).getRole();
+
+        return role;
+    }
 }

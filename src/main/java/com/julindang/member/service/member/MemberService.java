@@ -26,4 +26,5 @@ public interface MemberService {
     public void edit(MemberRiskRequestDto dto);
     public MemberInfoResponseDto getIfo();
     public void delete();
+    public String getAuthority();
 }

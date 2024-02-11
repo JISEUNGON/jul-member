@@ -20,8 +20,8 @@ public class AuthController {
     private final MemberService memberService;
 
     @GetMapping("/check")
-    public ResponseEntity<Set<Authority>> getAuthorities() {
-        return ResponseEntity.ok(memberService.getAuthorities());
+    public ResponseEntity<String> getAuthorities() {
+        return ResponseEntity.ok(memberService.getAuthority());
     }
 
     @GetMapping("/check-one")
