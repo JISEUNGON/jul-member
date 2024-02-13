@@ -22,6 +22,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -80,6 +82,10 @@ public class MemberServiceImpl implements MemberService {
                         .accessTokenExpiredAt(LocalDate.now().plusYears(1L))
                         .refreshToken(JwtUtil.createRefreshToken(memberId))
                         .refreshTokenExpiredAt(LocalDate.now().plusYears(1L))
+                        .authorities(Collections.singleton(
+                                Authority.builder().authorityName("ROLE_USER").build()
+                                )
+                        )
                         .build()
         );
 
@@ -137,9 +143,11 @@ public class MemberServiceImpl implements MemberService {
 
         Set<Authority> authorities = member.getAuthorities();
 
-        authorities.remove(Authority.builder()
-                        .authorityName("ROLE_ADMIN")
-                .build());
+        for(Authority authority: authorities) {
+            if(authority.getAuthorityName().equals("ROLE_ADMIN")) {
+                authorities.remove(authority);
+            }
+        }
 
         return memberRepository.save(
                 member
