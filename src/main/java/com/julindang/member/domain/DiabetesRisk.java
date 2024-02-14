@@ -38,5 +38,6 @@ public class DiabetesRisk {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "risk_id")
+    @OrderBy("itemId")
     private Set<RiskItem> items;
 }
